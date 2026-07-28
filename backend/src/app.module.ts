@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,13 +23,13 @@ import { UsersModule } from './users/users.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
-        // Atenção: synchronize: true é útil em dev/testes pequenos, mas NUNCA em produção real.
-        // Como é um teste de 3 dias, ele agiliza a criação das tabelas sem precisarmos de migrations complexas.
         synchronize: true,
       }),
     }),
 
     UsersModule,
+
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

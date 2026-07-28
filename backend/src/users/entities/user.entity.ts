@@ -14,13 +14,13 @@ export class User {
   @Column()
   name: string;
 
-  @Column({ unique: true }) // O e-mail não pode se repetir no banco
+  @Column({ unique: true }) 
   email: string;
 
   @Column()
-  passwordHash: string; // Guardaremos o hash da senha, nunca a senha em texto puro
+  passwordHash: string; 
 
-  @Column({ default: 'client' }) // Papéis possíveis: 'admin', 'support', 'client'
+  @Column({ default: 'client' }) 
   role: string;
 
   @CreateDateColumn()
