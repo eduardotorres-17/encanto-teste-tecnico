@@ -5,7 +5,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
+import { OneToMany } from 'typeorm';
+import { Ticket } from '../../tickets/entities/ticket.entity';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -14,13 +15,13 @@ export class User {
   @Column()
   name: string;
 
-  @Column({ unique: true }) 
+  @Column({ unique: true })
   email: string;
 
   @Column()
-  passwordHash: string; 
+  passwordHash: string;
 
-  @Column({ default: 'client' }) 
+  @Column({ default: 'client' })
   role: string;
 
   @CreateDateColumn()
@@ -28,4 +29,7 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Ticket, (ticket) => ticket.user)
+  tickets: Ticket[];
 }
