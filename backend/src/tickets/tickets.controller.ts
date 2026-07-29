@@ -14,7 +14,6 @@ import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { TicketStatus, TicketPriority } from './entities/ticket.entity';
 
 @Controller('tickets')
 @UseGuards(JwtAuthGuard)
@@ -32,14 +31,12 @@ export class TicketsController {
     @Query('titulo') titulo?: string,
     @Query('status') status?: string,
   ) {
-    const userId = req.user.id;
-
-    return this.ticketsService.findAll(userId, titulo, status);
+    return this.ticketsService.findAll(req.user, titulo, status);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string, @Request() req) {
-    return this.ticketsService.findOne(id, req.user.id);
+    return this.ticketsService.findOne(id, req.user);
   }
 
   @Patch(':id')
@@ -48,11 +45,11 @@ export class TicketsController {
     @Body() updateTicketDto: UpdateTicketDto,
     @Request() req,
   ) {
-    return this.ticketsService.update(id, req.user.id, updateTicketDto);
+    return this.ticketsService.update(id, req.user, updateTicketDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string, @Request() req) {
-    return this.ticketsService.remove(id, req.user.id);
+    return this.ticketsService.remove(id, req.user);
   }
 }
