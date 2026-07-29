@@ -4,9 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
-import { OneToMany } from 'typeorm';
 import { Ticket } from '../../tickets/entities/ticket.entity';
+
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')

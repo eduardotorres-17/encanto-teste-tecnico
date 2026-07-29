@@ -6,13 +6,14 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { TicketsModule } from './tickets/tickets.module';
+import { SeedService } from './seed/seed.service';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -27,14 +28,12 @@ import { TicketsModule } from './tickets/tickets.module';
         synchronize: true,
       }),
     }),
-
+    TypeOrmModule.forFeature([User]),
     UsersModule,
-
     AuthModule,
-
     TicketsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, SeedService],
 })
 export class AppModule {}
