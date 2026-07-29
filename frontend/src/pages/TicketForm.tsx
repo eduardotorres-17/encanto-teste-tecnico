@@ -63,10 +63,9 @@ export default function TicketForm() {
   ) => {
     try {
       setSubmitError(null);
-
       const payload: any = { ...values };
 
-      if (user?.role !== "support") {
+      if (!isEditing || user?.role !== "support") {
         delete payload.status;
       }
 
@@ -104,8 +103,8 @@ export default function TicketForm() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-100 dark:bg-black flex justify-center items-center transition-colors">
-        <p className="text-purple-600 dark:text-purple-400 animate-pulse font-medium">
+      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex justify-center items-center transition-colors">
+        <p className="text-emerald-600 dark:text-emerald-500 animate-pulse font-medium">
           Carregando dados...
         </p>
       </div>
@@ -113,14 +112,14 @@ export default function TicketForm() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-100 dark:bg-black p-6 flex flex-col items-center pt-20 transition-colors duration-300">
-      <div className="w-full max-w-2xl bg-white dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-xl p-8 shadow-sm transition-colors">
-        <div className="mb-8 border-b border-neutral-200 dark:border-neutral-800 pb-6 flex justify-between items-start">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 p-6 flex flex-col items-center pt-20 transition-colors duration-300">
+      <div className="w-full max-w-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-8 shadow-sm transition-colors">
+        <div className="mb-8 border-b border-zinc-200 dark:border-zinc-800 pb-6 flex justify-between items-start">
           <div>
-            <h1 className="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">
               {isEditing ? "Editar Ticket" : "Novo Ticket"}
             </h1>
-            <p className="text-neutral-500 dark:text-neutral-400 mt-1 text-sm">
+            <p className="text-zinc-500 dark:text-zinc-400 mt-1 text-sm">
               {isEditing
                 ? `Atualizando informações do ticket #${id?.slice(0, 4)}`
                 : "Descreva o problema ou solicitação de suporte"}
@@ -131,7 +130,7 @@ export default function TicketForm() {
               <button
                 onClick={handleDelete}
                 type="button"
-                className="text-neutral-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                className="text-zinc-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                 title="Excluir Ticket"
               >
                 <TrashIcon className="w-5 h-5" />
@@ -139,7 +138,7 @@ export default function TicketForm() {
             )}
             <Link
               to="/tickets"
-              className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors text-sm font-medium"
+              className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors text-sm font-medium"
             >
               Voltar
             </Link>
@@ -166,7 +165,7 @@ export default function TicketForm() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="title"
-                  className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
+                  className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
                 >
                   Título do Chamado
                 </label>
@@ -175,7 +174,7 @@ export default function TicketForm() {
                   name="title"
                   type="text"
                   placeholder="Ex: Falha no acesso ao sistema"
-                  className="bg-neutral-50 dark:bg-black border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors placeholder-neutral-400 dark:placeholder-neutral-600"
+                  className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors placeholder-zinc-400 dark:placeholder-zinc-600"
                 />
                 <ErrorMessage
                   name="title"
@@ -187,14 +186,14 @@ export default function TicketForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {isEditing && (
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                    <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                       Status Atual
                     </label>
                     {user?.role === "support" ? (
                       <Field
                         as="select"
                         name="status"
-                        className="bg-neutral-50 dark:bg-black border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors appearance-none"
+                        className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors appearance-none"
                       >
                         <option value="OPEN">Aberto</option>
                         <option value="IN_PROGRESS">Em Andamento</option>
@@ -202,14 +201,14 @@ export default function TicketForm() {
                       </Field>
                     ) : (
                       <>
-                        <div className="bg-neutral-100 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 rounded-lg px-4 py-2.5 cursor-not-allowed">
+                        <div className="bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 rounded-lg px-4 py-2.5 cursor-not-allowed">
                           {initialValues.status === "OPEN"
                             ? "Aberto"
                             : initialValues.status === "IN_PROGRESS"
                               ? "Em Andamento"
                               : "Resolvido"}
                         </div>
-                        <p className="text-xs text-neutral-500 dark:text-neutral-500 mt-1">
+                        <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-1">
                           Apenas a equipe de suporte pode alterar o status.
                         </p>
                       </>
@@ -220,7 +219,7 @@ export default function TicketForm() {
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="priority"
-                    className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
+                    className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
                   >
                     Prioridade
                   </label>
@@ -228,7 +227,7 @@ export default function TicketForm() {
                     as="select"
                     id="priority"
                     name="priority"
-                    className="bg-neutral-50 dark:bg-black border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors appearance-none"
+                    className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors appearance-none"
                   >
                     <option value="LOW">Baixa</option>
                     <option value="MEDIUM">Média</option>
@@ -240,7 +239,7 @@ export default function TicketForm() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="description"
-                  className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
+                  className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
                 >
                   Descrição Detalhada
                 </label>
@@ -250,7 +249,7 @@ export default function TicketForm() {
                   name="description"
                   rows={5}
                   placeholder="Descreva o que está acontecendo..."
-                  className="bg-neutral-50 dark:bg-black border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors placeholder-neutral-400 dark:placeholder-neutral-600 resize-none"
+                  className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors placeholder-zinc-400 dark:placeholder-zinc-600 resize-none"
                 />
                 <ErrorMessage
                   name="description"
@@ -263,7 +262,7 @@ export default function TicketForm() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-[#3b1d5c] hover:bg-[#2d1646] disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-black shadow-sm flex items-center justify-center min-w-[150px]"
+                  className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-950 shadow-sm flex items-center justify-center min-w-[150px]"
                 >
                   {isSubmitting
                     ? "Salvando..."

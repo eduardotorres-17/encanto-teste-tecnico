@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
   JoinColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
+import { Message } from '../../messages/entities/message.entity';
 
 export enum TicketStatus {
   OPEN = 'OPEN',
@@ -51,4 +53,7 @@ export class Ticket {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @OneToMany(() => Message, (message) => message.ticket)
+  messages: Message[];
 }

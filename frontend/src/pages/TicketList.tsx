@@ -99,7 +99,7 @@ export default function TicketList() {
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      OPEN: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300 border-purple-200 dark:border-purple-800/50",
+      OPEN: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/50",
       IN_PROGRESS:
         "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border-blue-200 dark:border-blue-800/50",
       CLOSED:
@@ -112,7 +112,7 @@ export default function TicketList() {
     };
     return (
       <span
-        className={`px-2.5 py-1 text-xs font-medium rounded-full border shrink-0 ${styles[status] || "bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"}`}
+        className={`px-2.5 py-1 text-xs font-medium rounded-full border shrink-0 ${styles[status] || "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
       >
         {labels[status] || status}
       </span>
@@ -124,7 +124,7 @@ export default function TicketList() {
       HIGH: "text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-400/10",
       MEDIUM:
         "text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-400/10",
-      LOW: "text-neutral-600 bg-neutral-100 dark:text-neutral-400 dark:bg-neutral-800",
+      LOW: "text-zinc-600 bg-zinc-100 dark:text-zinc-400 dark:bg-zinc-800",
     };
     return (
       <span
@@ -140,44 +140,44 @@ export default function TicketList() {
   };
 
   const renderListView = () => (
-    <div className="overflow-x-auto bg-white dark:bg-[#111111] rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm transition-colors">
+    <div className="overflow-x-auto bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm transition-colors">
       <table className="w-full text-left border-collapse">
         <thead>
-          <tr className="border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-black transition-colors">
-            <th className="px-6 py-4 text-sm font-semibold text-neutral-600 dark:text-neutral-400">
+          <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 transition-colors">
+            <th className="px-6 py-4 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
               Assunto
             </th>
-            <th className="px-6 py-4 text-sm font-semibold text-neutral-600 dark:text-neutral-400">
+            <th className="px-6 py-4 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
               Solicitante
             </th>
-            <th className="px-6 py-4 text-sm font-semibold text-neutral-600 dark:text-neutral-400">
+            <th className="px-6 py-4 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
               Status
             </th>
-            <th className="px-6 py-4 text-sm font-semibold text-neutral-600 dark:text-neutral-400">
+            <th className="px-6 py-4 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
               Data
             </th>
-            <th className="px-6 py-4 text-sm font-semibold text-neutral-600 dark:text-neutral-400">
+            <th className="px-6 py-4 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
               Prioridade
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
+        <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
           {filteredTickets.map((ticket) => (
             <tr
               key={ticket.id}
-              className="hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors group cursor-pointer"
+              className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors group cursor-pointer"
               onClick={() => navigate(`/tickets/${ticket.id}`)}
             >
               <td className="px-6 py-4 min-w-[200px]">
-                <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
                   {ticket.title}
                 </p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-500 mt-1 line-clamp-1">
+                <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-1 line-clamp-1">
                   {ticket.description}
                 </p>
               </td>
               <td className="px-6 py-4">
-                <div className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
+                <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
                   <UserIcon className="w-4 h-4 shrink-0" />
                   <span className="font-medium truncate max-w-[120px]">
                     {ticket.user?.name || "Não identificado"}
@@ -210,7 +210,7 @@ export default function TicketList() {
                     )}
                 </div>
               </td>
-              <td className="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400 whitespace-nowrap">
+              <td className="px-6 py-4 text-sm text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
                 {new Date(ticket.createdAt).toLocaleDateString("pt-BR")}
               </td>
               <td className="px-6 py-4">{getPriorityBadge(ticket.priority)}</td>
@@ -229,11 +229,11 @@ export default function TicketList() {
 
     return (
       <div className="flex flex-col gap-4 min-w-[320px] flex-1">
-        <div className="flex items-center justify-between bg-neutral-50 dark:bg-[#111111] px-4 py-3 rounded-lg border border-neutral-200 dark:border-neutral-800 transition-colors">
-          <h3 className="font-semibold text-neutral-800 dark:text-neutral-200">
+        <div className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-900 px-4 py-3 rounded-lg border border-zinc-200 dark:border-zinc-800 transition-colors">
+          <h3 className="font-semibold text-zinc-800 dark:text-zinc-200">
             {title}
           </h3>
-          <span className="bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 text-xs py-1 px-2.5 rounded-full border border-neutral-200 dark:border-neutral-700 shadow-sm">
+          <span className="bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs py-1 px-2.5 rounded-full border border-zinc-200 dark:border-zinc-700 shadow-sm">
             {columnTickets.length}
           </span>
         </div>
@@ -242,19 +242,19 @@ export default function TicketList() {
             <div
               key={ticket.id}
               onClick={() => navigate(`/tickets/${ticket.id}`)}
-              className="cursor-pointer bg-white dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-xl p-5 hover:border-purple-500/50 dark:hover:border-purple-500/50 transition-all hover:shadow-md group flex flex-col gap-3"
+              className="cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 transition-all hover:shadow-md group flex flex-col gap-3"
             >
               <div className="flex justify-between items-start gap-2">
-                <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 line-clamp-2">
+                <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 line-clamp-2">
                   {ticket.title}
                 </h4>
-                <span className="text-xs text-neutral-400 dark:text-neutral-600 font-mono shrink-0">
+                <span className="text-xs text-zinc-400 dark:text-zinc-600 font-mono shrink-0">
                   #{ticket.id.slice(0, 4)}
                 </span>
               </div>
 
-              <div className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-                <UserIcon className="w-4 h-4 text-neutral-400" />
+              <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                <UserIcon className="w-4 h-4 text-zinc-400" />
                 <span className="truncate font-medium">
                   {ticket.user?.name || "Não identificado"}
                 </span>
@@ -266,7 +266,7 @@ export default function TicketList() {
               </div>
 
               {user?.role === "support" && ticket.status !== "CLOSED" && (
-                <div className="flex justify-end mt-2 pt-4 border-t border-neutral-100 dark:border-neutral-800/60">
+                <div className="flex justify-end mt-2 pt-4 border-t border-zinc-100 dark:border-zinc-800/60">
                   {ticket.status === "OPEN" && (
                     <button
                       onClick={(e) =>
@@ -305,19 +305,19 @@ export default function TicketList() {
   );
 
   return (
-    <div className="min-h-screen bg-neutral-100 dark:bg-black p-6 md:p-8 transition-colors duration-300">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 p-6 md:p-8 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-neutral-900 dark:text-white tracking-tight">
-              Support Tickets
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white tracking-tight">
+              Tickets de Suporte
             </h1>
           </div>
 
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2 rounded-lg bg-white dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors shadow-sm"
+              className="p-2 rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors shadow-sm"
               title="Alternar Tema"
             >
               {isDarkMode ? (
@@ -329,14 +329,14 @@ export default function TicketList() {
 
             <button
               onClick={handleLogout}
-              className="text-neutral-500 dark:text-neutral-400 hover:text-red-500 dark:hover:text-red-400 p-2 transition-colors"
+              className="text-zinc-500 dark:text-zinc-400 hover:text-red-500 dark:hover:text-red-400 p-2 transition-colors"
               title="Sair"
             >
               <ArrowRightOnRectangleIcon className="w-6 h-6" />
             </button>
             <button
               onClick={() => navigate("/tickets/novo")}
-              className="bg-[#3b1d5c] hover:bg-[#2d1646] text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-lg flex items-center gap-2"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-lg flex items-center gap-2"
             >
               <PlusIcon className="w-5 h-5" />
               Novo Ticket
@@ -344,17 +344,17 @@ export default function TicketList() {
           </div>
         </header>
 
-        <div className="flex flex-col md:flex-row justify-between items-center bg-white dark:bg-[#111111] p-2 rounded-xl border border-neutral-200 dark:border-neutral-800 mb-6 gap-4 transition-colors shadow-sm">
-          <div className="flex bg-neutral-100 dark:bg-black p-1 rounded-lg border border-neutral-200 dark:border-neutral-800 w-full md:w-auto">
+        <div className="flex flex-col md:flex-row justify-between items-center bg-white dark:bg-zinc-900 p-2 rounded-xl border border-zinc-200 dark:border-zinc-800 mb-6 gap-4 transition-colors shadow-sm">
+          <div className="flex bg-zinc-100 dark:bg-zinc-950 p-1 rounded-lg border border-zinc-200 dark:border-zinc-800 w-full md:w-auto">
             <button
               onClick={() => setViewMode("LIST")}
-              className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${viewMode === "LIST" ? "bg-white dark:bg-[#111111] text-neutral-900 dark:text-white shadow-sm border border-neutral-200 dark:border-neutral-800" : "text-neutral-500 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"}`}
+              className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${viewMode === "LIST" ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm border border-zinc-200 dark:border-zinc-800" : "text-zinc-500 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"}`}
             >
               <ListBulletIcon className="w-5 h-5" /> Lista
             </button>
             <button
               onClick={() => setViewMode("KANBAN")}
-              className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${viewMode === "KANBAN" ? "bg-white dark:bg-[#111111] text-neutral-900 dark:text-white shadow-sm border border-neutral-200 dark:border-neutral-800" : "text-neutral-500 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"}`}
+              className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${viewMode === "KANBAN" ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm border border-zinc-200 dark:border-zinc-800" : "text-zinc-500 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"}`}
             >
               <ViewColumnsIcon className="w-5 h-5" /> Kanban
             </button>
@@ -362,19 +362,19 @@ export default function TicketList() {
 
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto px-2 md:px-0">
             <div className="relative">
-              <MagnifyingGlassIcon className="w-5 h-5 text-neutral-400 dark:text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <MagnifyingGlassIcon className="w-5 h-5 text-zinc-400 dark:text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Pesquisar por título..."
                 value={searchTitle}
                 onChange={(e) => setSearchTitle(e.target.value)}
-                className="w-full sm:w-64 bg-neutral-50 dark:bg-black border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white text-sm rounded-lg pl-10 pr-4 py-2.5 focus:ring-2 focus:ring-purple-500 outline-none transition-colors placeholder-neutral-400 dark:placeholder-neutral-600"
+                className="w-full sm:w-64 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm rounded-lg pl-10 pr-4 py-2.5 focus:ring-2 focus:ring-emerald-500 outline-none transition-colors placeholder-zinc-400 dark:placeholder-zinc-600"
               />
             </div>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full sm:w-40 bg-neutral-50 dark:bg-black border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white text-sm rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500 outline-none appearance-none transition-colors"
+              className="w-full sm:w-40 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-emerald-500 outline-none appearance-none transition-colors"
             >
               <option value="ALL">Todos os Status</option>
               <option value="OPEN">Abertos</option>
@@ -386,7 +386,7 @@ export default function TicketList() {
 
         <main>
           {loading ? (
-            <p className="text-purple-600 dark:text-purple-400 animate-pulse text-center py-20 font-medium">
+            <p className="text-emerald-600 dark:text-emerald-500 animate-pulse text-center py-20 font-medium">
               Carregando seus tickets...
             </p>
           ) : error ? (
@@ -394,8 +394,8 @@ export default function TicketList() {
               {error}
             </p>
           ) : filteredTickets.length === 0 ? (
-            <div className="bg-white dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-xl p-12 text-center transition-colors shadow-sm">
-              <p className="text-neutral-500 dark:text-neutral-400">
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-12 text-center transition-colors shadow-sm">
+              <p className="text-zinc-500 dark:text-zinc-400">
                 Nenhum ticket encontrado com esses filtros.
               </p>
             </div>

@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Ticket } from '../../tickets/entities/ticket.entity';
+import { Message } from '../../messages/entities/message.entity';
 
 @Entity('users')
 export class User {
@@ -33,4 +34,7 @@ export class User {
 
   @OneToMany(() => Ticket, (ticket) => ticket.user)
   tickets: Ticket[];
+
+  @OneToMany(() => Message, (message) => message.author)
+  messages: Message[];
 }

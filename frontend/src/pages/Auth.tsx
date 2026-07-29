@@ -53,7 +53,6 @@ export default function Auth() {
           });
           login(loginResponse.data.access_token);
         }
-
         navigate("/tickets");
       } catch (error: any) {
         setApiError(
@@ -65,35 +64,79 @@ export default function Auth() {
   });
 
   return (
-    <main className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
-      <section className="max-w-md w-full bg-gray-900 rounded-xl shadow-2xl overflow-hidden border border-gray-800">
-        <div className="p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white tracking-tight">
-              {isLogin ? "Bem-vindo de volta" : "Crie sua conta"}
-            </h1>
-            <p className="text-gray-400 mt-2">
+    <main className="min-h-screen flex bg-zinc-950 selection:bg-emerald-500/30">
+      <section className="hidden lg:flex w-1/2 bg-zinc-900 border-r border-zinc-800 flex-col justify-center items-center p-12 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-600 to-emerald-400"></div>
+
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl"></div>
+
+        <div className="relative z-10 flex flex-col items-center text-center">
+          <div className="bg-emerald-500/10 p-5 rounded-2xl mb-8 border border-emerald-500/20 shadow-lg shadow-emerald-900/20">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-12 h-12 text-emerald-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={1.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"
+              />
+            </svg>
+          </div>
+          <h1 className="text-4xl font-bold text-zinc-50 tracking-tight mb-4">
+            Portal de Tickets da Encanto
+          </h1>
+          <p className="text-zinc-400 max-w-md text-lg">
+            Abra chamados, acompanhe o status em tempo real e gerencie o suporte
+            técnico com eficiência.
+          </p>
+        </div>
+      </section>
+
+      <section className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative">
+        <div className="max-w-md w-full">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-semibold text-zinc-50 tracking-tight">
+              {isLogin ? "Acessar Portal" : "Criar Conta"}
+            </h2>
+            <p className="text-zinc-400 mt-2 text-sm">
               {isLogin
-                ? "Insira suas credenciais para acessar seus tickets."
-                : "Preencha os dados abaixo para começar a usar o sistema."}
+                ? "Insira suas credenciais para gerenciar seus chamados."
+                : "Preencha os dados abaixo para iniciar seu atendimento."}
             </p>
           </div>
 
           {apiError && (
             <div
               role="alert"
-              className="mb-6 p-4 bg-red-900/50 border border-red-500/50 rounded-lg text-red-200 text-sm text-center"
+              className="mb-6 p-4 bg-red-950/40 border border-red-900/50 rounded-xl text-red-400 text-sm flex items-center gap-3"
             >
-              {apiError}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 flex-shrink-0"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>{apiError}</span>
             </div>
           )}
 
-          <form onSubmit={formik.handleSubmit} className="space-y-5" noValidate>
+          <form onSubmit={formik.handleSubmit} className="space-y-6" noValidate>
             {!isLogin && (
-              <div>
+              <div className="space-y-1.5">
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-gray-300 mb-1"
+                  className="block text-sm font-medium text-zinc-300"
                 >
                   Nome Completo
                 </label>
@@ -101,90 +144,90 @@ export default function Auth() {
                   id="name"
                   type="text"
                   {...formik.getFieldProps("name")}
-                  className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
+                  className={`w-full px-4 py-3 bg-zinc-900/50 border rounded-xl text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 ${
                     formik.touched.name && formik.errors.name
-                      ? "border-red-500"
-                      : "border-gray-700"
+                      ? "border-red-500/50 focus:ring-red-500 focus:border-red-500"
+                      : "border-zinc-800"
                   }`}
-                  placeholder="João da Silva"
+                  placeholder="Seu nome"
                   aria-invalid={formik.touched.name && !!formik.errors.name}
                 />
-                {formik.touched.name && formik.errors.name ? (
-                  <p className="mt-1 text-sm text-red-400">
+                {formik.touched.name && formik.errors.name && (
+                  <p className="text-xs text-red-400 mt-1.5">
                     {formik.errors.name}
                   </p>
-                ) : null}
+                )}
               </div>
             )}
 
-            <div>
+            <div className="space-y-1.5">
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-300 mb-1"
+                className="block text-sm font-medium text-zinc-300"
               >
-                E-mail
+                E-mail Profissional
               </label>
               <input
                 id="email"
                 type="email"
                 {...formik.getFieldProps("email")}
-                className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
+                className={`w-full px-4 py-3 bg-zinc-900/50 border rounded-xl text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 ${
                   formik.touched.email && formik.errors.email
-                    ? "border-red-500"
-                    : "border-gray-700"
+                    ? "border-red-500/50 focus:ring-red-500 focus:border-red-500"
+                    : "border-zinc-800"
                 }`}
-                placeholder="voce@exemplo.com.br"
+                placeholder="voce@empresa.com.br"
                 aria-invalid={formik.touched.email && !!formik.errors.email}
               />
-              {formik.touched.email && formik.errors.email ? (
-                <p className="mt-1 text-sm text-red-400">
+              {formik.touched.email && formik.errors.email && (
+                <p className="text-xs text-red-400 mt-1.5">
                   {formik.errors.email}
                 </p>
-              ) : null}
+              )}
             </div>
 
-            <div>
+            <div className="space-y-1.5">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-300 mb-1"
+                className="block text-sm font-medium text-zinc-300"
               >
-                Senha
+                Senha de Acesso
               </label>
               <input
                 id="password"
                 type="password"
                 {...formik.getFieldProps("password")}
-                className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
+                className={`w-full px-4 py-3 bg-zinc-900/50 border rounded-xl text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 ${
                   formik.touched.password && formik.errors.password
-                    ? "border-red-500"
-                    : "border-gray-700"
+                    ? "border-red-500/50 focus:ring-red-500 focus:border-red-500"
+                    : "border-zinc-800"
                 }`}
                 placeholder="••••••••"
                 aria-invalid={
                   formik.touched.password && !!formik.errors.password
                 }
               />
-              {formik.touched.password && formik.errors.password ? (
-                <p className="mt-1 text-sm text-red-400">
+              {formik.touched.password && formik.errors.password && (
+                <p className="text-xs text-red-400 mt-1.5">
                   {formik.errors.password}
                 </p>
-              ) : null}
+              )}
             </div>
 
             <button
               type="submit"
               disabled={formik.isSubmitting}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-3.5 px-4 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-zinc-950 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-900/20 mt-4"
             >
               {formik.isSubmitting
-                ? "Processando..."
+                ? "Autenticando..."
                 : isLogin
-                  ? "Entrar"
-                  : "Cadastrar"}
+                  ? "Entrar no Sistema"
+                  : "Concluir Cadastro"}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-8 pt-6 border-t border-zinc-800/80 text-center">
             <button
               type="button"
               onClick={() => {
@@ -192,11 +235,23 @@ export default function Auth() {
                 formik.resetForm();
                 setApiError(null);
               }}
-              className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors focus:outline-none focus:underline"
+              className="text-sm text-zinc-400 hover:text-zinc-200 transition-colors focus:outline-none"
             >
-              {isLogin
-                ? "Não tem uma conta? Cadastre-se"
-                : "Já tem uma conta? Faça login"}
+              {isLogin ? (
+                <span>
+                  Não possui acesso?{" "}
+                  <strong className="text-emerald-500 font-medium">
+                    Solicite sua conta
+                  </strong>
+                </span>
+              ) : (
+                <span>
+                  Já é cadastrado?{" "}
+                  <strong className="text-emerald-500 font-medium">
+                    Faça login
+                  </strong>
+                </span>
+              )}
             </button>
           </div>
         </div>
