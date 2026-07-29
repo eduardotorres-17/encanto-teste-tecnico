@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { Ticket, TicketStatus, TicketPriority } from './entities/ticket.entity';
@@ -10,7 +10,7 @@ import { User } from '../users/entities/user.entity';
 export class TicketsService {
   constructor(
     @InjectRepository(Ticket)
-    private readonly ticketsRepository: Repository<Ticket>,
+    private ticketsRepository: Repository<Ticket>,
   ) {}
 
   async create(createTicketDto: CreateTicketDto, user: User): Promise<Ticket> {
@@ -22,51 +22,51 @@ export class TicketsService {
     return await this.ticketsRepository.save(ticket);
   }
 
-  async findAll(
-    status?: TicketStatus,
-    priority?: TicketPriority,
-  ): Promise<Ticket[]> {
-    const query = this.ticketsRepository
-      .createQueryBuilder('ticket')
-      .leftJoinAndSelect('ticket.user', 'user')
-      .select(['ticket', 'user.id', 'user.name', 'user.email']);
+  async findAll(userId: string, titulo?: string, status?: string) {
+    const whereClause: any = { user: { id: userId } };
 
+    if (titulo) {
+      whereClause.titulo = ILike(`%${titulo}%`);
+    }
     if (status) {
-      query.andWhere('ticket.status = :status', { status });
+      whereClause.status = status;
     }
 
-    if (priority) {
-      query.andWhere('ticket.priority = :priority', { priority });
-    }
-
-    query.orderBy('ticket.createdAt', 'DESC');
-
-    return await query.getMany();
+    return this.ticketsRepository.find({
+      where: whereClause,
+      order: { id: 'DESC' },
+    });
   }
 
-  async findOne(id: string): Promise<Ticket> {
+  async findOne(id: string, userId: string): Promise<Ticket> {
     const ticket = await this.ticketsRepository.findOne({
-      where: { id },
+      where: { id, user: { id: userId } },
       relations: { user: true },
     });
 
     if (!ticket) {
-      throw new NotFoundException(`Ticket com ID ${id} não encontrado.`);
+      throw new NotFoundException(
+        `Ticket com ID ${id} não encontrado ou você não tem permissão para acessá-lo.`,
+      );
     }
 
     return ticket;
   }
 
-  async update(id: string, updateTicketDto: UpdateTicketDto): Promise<Ticket> {
-    const ticket = await this.findOne(id);
+  async update(
+    id: string,
+    userId: string,
+    updateTicketDto: UpdateTicketDto,
+  ): Promise<Ticket> {
+    const ticket = await this.findOne(id, userId);
 
     Object.assign(ticket, updateTicketDto);
 
     return await this.ticketsRepository.save(ticket);
   }
 
-  async remove(id: string): Promise<void> {
-    const ticket = await this.findOne(id);
+  async remove(id: string, userId: string): Promise<void> {
+    const ticket = await this.findOne(id, userId);
     await this.ticketsRepository.remove(ticket);
   }
 }

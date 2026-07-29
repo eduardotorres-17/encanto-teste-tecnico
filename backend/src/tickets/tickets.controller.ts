@@ -16,8 +16,8 @@ import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { TicketStatus, TicketPriority } from './entities/ticket.entity';
 
-@UseGuards(JwtAuthGuard)
 @Controller('tickets')
+@UseGuards(JwtAuthGuard)
 export class TicketsController {
   constructor(private readonly ticketsService: TicketsService) {}
 
@@ -28,24 +28,31 @@ export class TicketsController {
 
   @Get()
   findAll(
-    @Query('status') status?: TicketStatus,
-    @Query('priority') priority?: TicketPriority,
+    @Request() req,
+    @Query('titulo') titulo?: string,
+    @Query('status') status?: string,
   ) {
-    return this.ticketsService.findAll(status, priority);
+    const userId = req.user.id;
+
+    return this.ticketsService.findAll(userId, titulo, status);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ticketsService.findOne(id);
+  findOne(@Param('id') id: string, @Request() req) {
+    return this.ticketsService.findOne(id, req.user.id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
-    return this.ticketsService.update(id, updateTicketDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateTicketDto: UpdateTicketDto,
+    @Request() req,
+  ) {
+    return this.ticketsService.update(id, req.user.id, updateTicketDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ticketsService.remove(id);
+  remove(@Param('id') id: string, @Request() req) {
+    return this.ticketsService.remove(id, req.user.id);
   }
 }
