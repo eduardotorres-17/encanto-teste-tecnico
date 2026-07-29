@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { SeedService } from './seed/seed.service';
 import { User } from './users/entities/user.entity';
+import { MessagesModule } from './messages/messages.module';
+import { AiService } from './ai/ai.service';
 
 @Module({
   imports: [
@@ -32,8 +34,9 @@ import { User } from './users/entities/user.entity';
     UsersModule,
     AuthModule,
     TicketsModule,
+    MessagesModule,
   ],
   controllers: [AppController],
-  providers: [AppService, SeedService],
+  providers: [AppService, SeedService, AiService],
 })
 export class AppModule {}

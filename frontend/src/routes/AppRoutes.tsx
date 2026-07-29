@@ -4,6 +4,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import Auth from "../pages/Auth";
 import TicketList from "../pages/TicketList";
 import TicketForm from "../pages/TicketForm";
+import TicketDetails from "../pages/TicketDetails";
 
 export function AppRoutes() {
   return (
@@ -30,6 +31,14 @@ export function AppRoutes() {
           />
           <Route
             path="/tickets/:id"
+            element={
+              <ProtectedRoute>
+                <TicketDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tickets/:id/editar"
             element={
               <ProtectedRoute>
                 <TicketForm />
