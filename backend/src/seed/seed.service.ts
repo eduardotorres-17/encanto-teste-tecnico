@@ -1,7 +1,7 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../users/entities/user.entity'; // Ajuste o caminho se necessário
+import { User } from '../users/entities/user.entity'; 
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
