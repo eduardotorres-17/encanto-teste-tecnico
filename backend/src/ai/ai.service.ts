@@ -11,7 +11,6 @@ export class AiService {
         throw new Error('API Key ausente');
       }
 
-      // Usando a URL direta da API REST do Google
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
 
       const prompt = `
@@ -41,13 +40,11 @@ export class AiService {
 
       const data = await response.json();
 
-      // Se a resposta HTTP não for 200 OK, logamos o erro real retornado pelo Google
       if (!response.ok) {
         console.error('🚨 Erro direto da API REST do Google:', data);
         throw new Error(data.error?.message || 'Erro desconhecido na API');
       }
 
-      // Extrai o texto da resposta da estrutura JSON do Google
       return data.candidates[0].content.parts[0].text;
     } catch (error) {
       console.error('🚨 Erro no AiService:', error);

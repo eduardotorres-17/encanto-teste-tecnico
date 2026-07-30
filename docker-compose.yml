@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
@@ -10,9 +10,33 @@ services:
       POSTGRES_PASSWORD: encanto_password
       POSTGRES_DB: encanto_tickets
     ports:
+      # O seu banco local continuará mapeado na porta 5434
       - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend # Certifique-se de que a pasta se chama 'backend'
+    container_name: encanto_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      # Repare que o host aqui é 'postgres' (o nome do serviço acima) e a porta é 5432 (a porta interna do container)
+      - DATABASE_URL=postgres://encanto_user:encanto_password@postgres:5432/encanto_tickets
+      # Adicione suas outras variáveis de ambiente do NestJS aqui (JWT_SECRET, GEMINI_API_KEY, etc)
+    depends_on:
+      - postgres
+
+  frontend:
+    build: ./frontend # Certifique-se de que a pasta se chama 'frontend'
+    container_name: encanto_frontend
+    restart: always
+    ports:
+      # O avaliador vai acessar a aplicação em http://localhost:8080
+      - "8080:80"
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
