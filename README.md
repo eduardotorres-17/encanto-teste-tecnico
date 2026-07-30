@@ -42,10 +42,10 @@ O projeto foi totalmente containerizado para facilitar a execução. Você só p
    
    JWT_SECRET=uma_chave_secreta_qualquer
    GEMINI_API_KEY=sua_chave_da_api_do_google_aqui
-Na raiz do projeto, execute:
-
-Bash
-docker-compose up --build -d
+3. **Suba os containers:**
+   Na raiz do projeto, execute:
+   ```bash
+   docker-compose up --build -d
 Acesse a aplicação:
 
 Frontend: http://localhost:8080
