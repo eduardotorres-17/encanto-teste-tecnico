@@ -35,6 +35,7 @@ cd encanto-teste-tecnico
 ```
 
 2. **Configure as variáveis de ambiente:**
+   
 A) Na pasta backend, crie um arquivo .env baseado no .env.example (se houver) ou crie o arquivo do zero adicionando as seguintes variáveis:
 ```bash
 DB_HOST=postgres
