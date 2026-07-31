@@ -28,24 +28,38 @@ Este projeto é uma versão simplificada de um sistema de Help Desk, desenvolvid
 O projeto foi totalmente containerizado para facilitar a execução. Você só precisa ter o **Docker** e o **Docker Compose** instalados na sua máquina.
 
 1. **Clone o repositório:**
-   ```bash
-   git clone https://github.com/eduardotorres-17/encanto-teste-tecnico.git
-   cd encanto-teste-tecnico
+
+```bash
+git clone https://github.com/eduardotorres-17/encanto-teste-tecnico.git
+cd encanto-teste-tecnico
+```
+
 2. **Configure as variáveis de ambiente:**
-   Na pasta `backend`, crie um arquivo `.env` baseado no `.env.example` (se houver) ou crie o arquivo do zero adicionando as seguintes variáveis:
-   ```env
-   DB_HOST=postgres
-   DB_PORT=5432
-   DB_USER=encanto_user
-   DB_PASSWORD=encanto_password
-   DB_NAME=encanto_tickets
-   
-   JWT_SECRET=uma_chave_secreta_qualquer
-   GEMINI_API_KEY=sua_chave_da_api_do_google_aqui
+A) Na pasta backend, crie um arquivo .env baseado no .env.example (se houver) ou crie o arquivo do zero adicionando as seguintes variáveis:
+```bash
+DB_HOST=postgres
+DB_PORT=5432
+DB_USER=encanto_user
+DB_PASSWORD=encanto_password
+DB_NAME=encanto_tickets
+
+JWT_SECRET=uma_chave_secreta_qualquer
+GEMINI_API_KEY=sua_chave_da_api_do_google_aqui
+```
+B) No arquivo docker-compose.yml na raiz do projeto, certifique-se de adicionar a mesma chave no serviço do backend (enviarei a minha chave de API no e-mail):
+```bash
+backend:
+  # ...
+  environment:
+    # ...
+    - GEMINI_API_KEY=sua_chave_da_api_do_google_aqui
+```
 3. **Suba os containers:**
-   Na raiz do projeto, execute:
-   ```bash
-   docker-compose up --build -d
+Na raiz do projeto, execute:
+
+```bash
+docker-compose up --build -d
+```
 Acesse a aplicação:
 
 Frontend: http://localhost:8080
