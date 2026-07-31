@@ -13,6 +13,9 @@ import {
   PlayIcon,
   CheckIcon,
   UserIcon,
+  UserCircleIcon,
+  TicketIcon,
+  FunnelIcon,
 } from "@heroicons/react/24/outline";
 
 interface Ticket {
@@ -22,21 +25,20 @@ interface Ticket {
   status: "OPEN" | "IN_PROGRESS" | "CLOSED";
   priority: "LOW" | "MEDIUM" | "HIGH";
   createdAt: string;
-  user?: {
-    name: string;
-  };
+  user?: { name: string; email?: string };
 }
 
 export default function TicketList() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const [viewMode, setViewMode] = useState<"LIST" | "KANBAN">("LIST");
   const [searchTitle, setSearchTitle] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("ALL");
-
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem("@encanto-theme");
+    return savedTheme ? savedTheme === "dark" : true;
+  });
 
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -44,8 +46,10 @@ export default function TicketList() {
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
+      localStorage.setItem("@encanto-theme", "dark");
     } else {
       document.documentElement.classList.remove("dark");
+      localStorage.setItem("@encanto-theme", "light");
     }
   }, [isDarkMode]);
 
@@ -83,7 +87,6 @@ export default function TicketList() {
         ),
       );
     } catch (err) {
-      console.error("Erro ao atualizar status", err);
       alert("Não foi possível atualizar o status.");
     }
   };
@@ -99,11 +102,11 @@ export default function TicketList() {
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      OPEN: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/50",
+      OPEN: "bg-zinc-100 text-zinc-700 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700",
       IN_PROGRESS:
-        "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border-blue-200 dark:border-blue-800/50",
+        "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20",
       CLOSED:
-        "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/50",
+        "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20",
     };
     const labels: Record<string, string> = {
       OPEN: "Aberto",
@@ -112,7 +115,7 @@ export default function TicketList() {
     };
     return (
       <span
-        className={`px-2.5 py-1 text-xs font-medium rounded-full border shrink-0 ${styles[status] || "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+        className={`px-3 py-1 text-xs font-semibold rounded-full border shadow-sm shrink-0 ${styles[status]}`}
       >
         {labels[status] || status}
       </span>
@@ -121,14 +124,14 @@ export default function TicketList() {
 
   const getPriorityBadge = (priority: string) => {
     const styles: Record<string, string> = {
-      HIGH: "text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-400/10",
+      HIGH: "text-red-700 bg-red-50 border-red-200 dark:text-red-400 dark:bg-red-500/10 dark:border-red-500/20",
       MEDIUM:
-        "text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-400/10",
-      LOW: "text-zinc-600 bg-zinc-100 dark:text-zinc-400 dark:bg-zinc-800",
+        "text-orange-700 bg-orange-50 border-orange-200 dark:text-orange-400 dark:bg-orange-500/10 dark:border-orange-500/20",
+      LOW: "text-zinc-600 bg-zinc-100 border-zinc-200 dark:text-zinc-400 dark:bg-zinc-800 dark:border-zinc-700",
     };
     return (
       <span
-        className={`px-2 py-0.5 text-xs font-semibold rounded shrink-0 ${styles[priority]}`}
+        className={`px-2.5 py-1 text-xs font-semibold rounded-md border shrink-0 ${styles[priority]}`}
       >
         {priority === "HIGH"
           ? "Alta"
@@ -140,51 +143,51 @@ export default function TicketList() {
   };
 
   const renderListView = () => (
-    <div className="overflow-x-auto bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm transition-colors">
+    <div className="overflow-x-auto bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm transition-all">
       <table className="w-full text-left border-collapse">
         <thead>
-          <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 transition-colors">
-            <th className="px-6 py-4 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+          <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50">
+            <th className="px-6 py-4 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
               Assunto
             </th>
-            <th className="px-6 py-4 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+            <th className="px-6 py-4 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
               Solicitante
             </th>
-            <th className="px-6 py-4 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+            <th className="px-6 py-4 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
               Status
             </th>
-            <th className="px-6 py-4 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+            <th className="px-6 py-4 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
               Data
             </th>
-            <th className="px-6 py-4 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+            <th className="px-6 py-4 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
               Prioridade
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+        <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/60">
           {filteredTickets.map((ticket) => (
             <tr
               key={ticket.id}
-              className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors group cursor-pointer"
+              className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors group cursor-pointer"
               onClick={() => navigate(`/tickets/${ticket.id}`)}
             >
-              <td className="px-6 py-4 min-w-[200px]">
-                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
+              <td className="px-6 py-5 min-w-[250px]">
+                <p className="text-base font-semibold text-zinc-800 dark:text-zinc-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                   {ticket.title}
                 </p>
-                <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-1 line-clamp-1">
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-1 font-normal">
                   {ticket.description}
                 </p>
               </td>
-              <td className="px-6 py-4">
-                <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
-                  <UserIcon className="w-4 h-4 shrink-0" />
+              <td className="px-6 py-5">
+                <div className="flex items-center gap-2.5 text-sm text-zinc-700 dark:text-zinc-300">
+                  <UserCircleIcon className="w-5 h-5 shrink-0 text-zinc-400" />
                   <span className="font-medium truncate max-w-[120px]">
-                    {ticket.user?.name || "Não identificado"}
+                    {ticket.user?.name || "Desconhecido"}
                   </span>
                 </div>
               </td>
-              <td className="px-6 py-4 min-w-[250px]">
+              <td className="px-6 py-5 min-w-[250px]">
                 <div className="flex items-center gap-3">
                   {getStatusBadge(ticket.status)}
                   {user?.role === "support" && ticket.status === "OPEN" && (
@@ -192,9 +195,9 @@ export default function TicketList() {
                       onClick={(e) =>
                         handleStatusUpdate(e, ticket.id, "IN_PROGRESS")
                       }
-                      className="flex items-center gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1.5 rounded-md transition-colors shadow-sm"
+                      className="flex items-center gap-1.5 text-xs font-semibold bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 px-3 py-1.5 rounded-lg transition-colors shadow-sm"
                     >
-                      <PlayIcon className="w-3.5 h-3.5" /> Iniciar
+                      <PlayIcon className="w-4 h-4 text-blue-500" /> Iniciar
                     </button>
                   )}
                   {user?.role === "support" &&
@@ -203,17 +206,18 @@ export default function TicketList() {
                         onClick={(e) =>
                           handleStatusUpdate(e, ticket.id, "CLOSED")
                         }
-                        className="flex items-center gap-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1.5 rounded-md transition-colors shadow-sm"
+                        className="flex items-center gap-1.5 text-xs font-semibold bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 px-3 py-1.5 rounded-lg transition-colors shadow-sm"
                       >
-                        <CheckIcon className="w-3.5 h-3.5" /> Resolver
+                        <CheckIcon className="w-4 h-4 text-emerald-500" />{" "}
+                        Resolver
                       </button>
                     )}
                 </div>
               </td>
-              <td className="px-6 py-4 text-sm text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
+              <td className="px-6 py-5 text-sm font-medium text-zinc-600 dark:text-zinc-400 whitespace-nowrap">
                 {new Date(ticket.createdAt).toLocaleDateString("pt-BR")}
               </td>
-              <td className="px-6 py-4">{getPriorityBadge(ticket.priority)}</td>
+              <td className="px-6 py-5">{getPriorityBadge(ticket.priority)}</td>
             </tr>
           ))}
         </tbody>
@@ -226,14 +230,13 @@ export default function TicketList() {
     title: string,
   ) => {
     const columnTickets = filteredTickets.filter((t) => t.status === status);
-
     return (
-      <div className="flex flex-col gap-4 min-w-[320px] flex-1">
-        <div className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-900 px-4 py-3 rounded-lg border border-zinc-200 dark:border-zinc-800 transition-colors">
+      <div className="flex flex-col gap-4 min-w-[340px] flex-1 bg-zinc-50 dark:bg-zinc-900/30 p-4 rounded-xl border border-zinc-200/80 dark:border-zinc-800/50">
+        <div className="flex items-center justify-between mb-2 px-1">
           <h3 className="font-semibold text-zinc-800 dark:text-zinc-200">
             {title}
           </h3>
-          <span className="bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs py-1 px-2.5 rounded-full border border-zinc-200 dark:border-zinc-700 shadow-sm">
+          <span className="bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 text-xs font-semibold py-1 px-2.5 rounded-full border border-zinc-200 dark:border-zinc-700 shadow-sm">
             {columnTickets.length}
           </span>
         </div>
@@ -242,53 +245,26 @@ export default function TicketList() {
             <div
               key={ticket.id}
               onClick={() => navigate(`/tickets/${ticket.id}`)}
-              className="cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 transition-all hover:shadow-md group flex flex-col gap-3"
+              className="cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 transition-all duration-200 hover:shadow-md hover:border-emerald-300 dark:hover:border-emerald-500/50 group flex flex-col gap-3"
             >
-              <div className="flex justify-between items-start gap-2">
-                <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 line-clamp-2">
+              <div className="flex justify-between items-start gap-3">
+                <h4 className="text-base font-semibold text-zinc-800 dark:text-zinc-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 line-clamp-2 leading-snug">
                   {ticket.title}
                 </h4>
-                <span className="text-xs text-zinc-400 dark:text-zinc-600 font-mono shrink-0">
+                <span className="text-xs font-medium text-zinc-400 shrink-0">
                   #{ticket.id.slice(0, 4)}
                 </span>
               </div>
-
-              <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-                <UserIcon className="w-4 h-4 text-zinc-400" />
-                <span className="truncate font-medium">
-                  {ticket.user?.name || "Não identificado"}
+              <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+                <UserIcon className="w-4 h-4" />
+                <span className="truncate">
+                  {ticket.user?.name || "Desconhecido"}
                 </span>
               </div>
-
-              <div className="flex justify-between items-center mt-1">
+              <div className="flex justify-between items-center mt-3 pt-3 border-t border-zinc-100 dark:border-zinc-800/80">
                 {getStatusBadge(ticket.status)}
                 {getPriorityBadge(ticket.priority)}
               </div>
-
-              {user?.role === "support" && ticket.status !== "CLOSED" && (
-                <div className="flex justify-end mt-2 pt-4 border-t border-zinc-100 dark:border-zinc-800/60">
-                  {ticket.status === "OPEN" && (
-                    <button
-                      onClick={(e) =>
-                        handleStatusUpdate(e, ticket.id, "IN_PROGRESS")
-                      }
-                      className="flex items-center justify-center gap-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-sm px-4 py-2 rounded-lg transition-all w-full"
-                    >
-                      <PlayIcon className="w-4 h-4" /> Iniciar Atendimento
-                    </button>
-                  )}
-                  {ticket.status === "IN_PROGRESS" && (
-                    <button
-                      onClick={(e) =>
-                        handleStatusUpdate(e, ticket.id, "CLOSED")
-                      }
-                      className="flex items-center justify-center gap-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm px-4 py-2 rounded-lg transition-all w-full"
-                    >
-                      <CheckIcon className="w-4 h-4" /> Marcar como Resolvido
-                    </button>
-                  )}
-                </div>
-              )}
             </div>
           ))}
         </div>
@@ -297,115 +273,163 @@ export default function TicketList() {
   };
 
   const renderKanbanView = () => (
-    <div className="flex gap-6 overflow-x-auto pb-4">
-      {renderKanbanColumn("OPEN", "Abertos")}
-      {renderKanbanColumn("IN_PROGRESS", "Em Andamento")}
-      {renderKanbanColumn("CLOSED", "Resolvidos")}
+    <div className="flex gap-6 overflow-x-auto pb-6 min-h-[500px] snap-x">
+      {renderKanbanColumn("OPEN", "Na Fila")}
+      {renderKanbanColumn("IN_PROGRESS", "Em Atendimento")}
+      {renderKanbanColumn("CLOSED", "Finalizados")}
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 p-6 md:p-8 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto">
-        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white tracking-tight">
-              Tickets de Suporte
-            </h1>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2 rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors shadow-sm"
-              title="Alternar Tema"
-            >
-              {isDarkMode ? (
-                <SunIcon className="w-5 h-5" />
-              ) : (
-                <MoonIcon className="w-5 h-5" />
-              )}
-            </button>
-
-            <button
-              onClick={handleLogout}
-              className="text-zinc-500 dark:text-zinc-400 hover:text-red-500 dark:hover:text-red-400 p-2 transition-colors"
-              title="Sair"
-            >
-              <ArrowRightOnRectangleIcon className="w-6 h-6" />
-            </button>
-            <button
-              onClick={() => navigate("/tickets/novo")}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-lg flex items-center gap-2"
-            >
-              <PlusIcon className="w-5 h-5" />
-              Novo Ticket
-            </button>
-          </div>
-        </header>
-
-        <div className="flex flex-col md:flex-row justify-between items-center bg-white dark:bg-zinc-900 p-2 rounded-xl border border-zinc-200 dark:border-zinc-800 mb-6 gap-4 transition-colors shadow-sm">
-          <div className="flex bg-zinc-100 dark:bg-zinc-950 p-1 rounded-lg border border-zinc-200 dark:border-zinc-800 w-full md:w-auto">
-            <button
-              onClick={() => setViewMode("LIST")}
-              className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${viewMode === "LIST" ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm border border-zinc-200 dark:border-zinc-800" : "text-zinc-500 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"}`}
-            >
-              <ListBulletIcon className="w-5 h-5" /> Lista
-            </button>
-            <button
-              onClick={() => setViewMode("KANBAN")}
-              className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${viewMode === "KANBAN" ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm border border-zinc-200 dark:border-zinc-800" : "text-zinc-500 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"}`}
-            >
-              <ViewColumnsIcon className="w-5 h-5" /> Kanban
-            </button>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto px-2 md:px-0">
-            <div className="relative">
-              <MagnifyingGlassIcon className="w-5 h-5 text-zinc-400 dark:text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Pesquisar por título..."
-                value={searchTitle}
-                onChange={(e) => setSearchTitle(e.target.value)}
-                className="w-full sm:w-64 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm rounded-lg pl-10 pr-4 py-2.5 focus:ring-2 focus:ring-emerald-500 outline-none transition-colors placeholder-zinc-400 dark:placeholder-zinc-600"
-              />
+    <div className="flex h-screen bg-[#fafafa] dark:bg-[#09090b] transition-colors duration-300 overflow-hidden font-sans">
+      <aside className="w-72 bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800/80 flex flex-col justify-between shadow-sm z-10 hidden md:flex">
+        <div>
+          <div className="p-7 border-b border-zinc-100 dark:border-zinc-800/80 flex items-center gap-3">
+            <div className="bg-emerald-600 p-2.5 rounded-xl shadow-sm">
+              <TicketIcon className="w-6 h-6 text-white" />
             </div>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full sm:w-40 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-emerald-500 outline-none appearance-none transition-colors"
-            >
-              <option value="ALL">Todos os Status</option>
-              <option value="OPEN">Abertos</option>
-              <option value="IN_PROGRESS">Em Andamento</option>
-              <option value="CLOSED">Resolvidos</option>
-            </select>
+            <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 tracking-tight">
+              Encanto Desk
+            </h2>
+          </div>
+          <div className="p-5">
+            <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-4 ml-2">
+              Menu Principal
+            </p>
+            <button className="w-full flex items-center gap-3 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 px-4 py-3 rounded-lg font-medium transition-all border border-emerald-100 dark:border-emerald-500/20">
+              <ListBulletIcon className="w-5 h-5" />
+              Meus Tickets
+            </button>
           </div>
         </div>
+        <div className="p-5 border-t border-zinc-100 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-950/50">
+          <div className="flex items-center gap-3 mb-5 px-2">
+            <div className="bg-zinc-200 dark:bg-zinc-800 p-2 rounded-full">
+              <UserIcon className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
+            </div>
+            <div className="flex flex-col overflow-hidden">
+              <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 truncate">
+                {user?.name || "Usuário"}
+              </span>
+              <span className="text-xs text-zinc-500 truncate">
+                {user?.role === "support" ? "Suporte Técnico" : "Cliente"}
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 text-sm font-medium text-zinc-600 hover:text-red-600 dark:text-zinc-400 dark:hover:text-red-400 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 hover:border-red-200 dark:hover:border-red-900/50 py-2.5 rounded-lg transition-colors"
+          >
+            <ArrowRightOnRectangleIcon className="w-5 h-5" />
+            Sair do Sistema
+          </button>
+        </div>
+      </aside>
 
-        <main>
-          {loading ? (
-            <p className="text-emerald-600 dark:text-emerald-500 animate-pulse text-center py-20 font-medium">
-              Carregando seus tickets...
-            </p>
-          ) : error ? (
-            <p className="text-red-600 dark:text-red-400 text-center py-20 font-medium">
-              {error}
-            </p>
-          ) : filteredTickets.length === 0 ? (
-            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-12 text-center transition-colors shadow-sm">
-              <p className="text-zinc-500 dark:text-zinc-400">
-                Nenhum ticket encontrado com esses filtros.
+      <main className="flex-1 overflow-y-auto flex flex-col relative">
+        <div className="p-6 md:p-10 max-w-7xl mx-auto w-full">
+          <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-5">
+            <div>
+              <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">
+                Painel de Tickets
+              </h1>
+              <p className="text-zinc-500 dark:text-zinc-400 font-medium mt-1 text-base">
+                Gerencie suas solicitações com facilidade e rapidez.
               </p>
             </div>
-          ) : viewMode === "LIST" ? (
-            renderListView()
-          ) : (
-            renderKanbanView()
-          )}
-        </main>
-      </div>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className="p-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all shadow-sm"
+              >
+                {isDarkMode ? (
+                  <SunIcon className="w-5 h-5" />
+                ) : (
+                  <MoonIcon className="w-5 h-5" />
+                )}
+              </button>
+              <button
+                onClick={() => navigate("/tickets/novo")}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-medium transition-colors shadow-sm flex items-center gap-2"
+              >
+                <PlusIcon className="w-5 h-5" />
+                Novo Chamado
+              </button>
+            </div>
+          </header>
+
+          <div className="flex flex-col md:flex-row justify-between items-center bg-transparent mb-6 gap-4">
+            <div className="flex bg-zinc-200/50 dark:bg-zinc-900 p-1 rounded-xl w-full md:w-auto border border-zinc-200 dark:border-zinc-800">
+              <button
+                onClick={() => setViewMode("LIST")}
+                className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2 rounded-lg text-sm font-medium transition-all ${viewMode === "LIST" ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-sm" : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"}`}
+              >
+                <ListBulletIcon className="w-5 h-5" /> Lista
+              </button>
+              <button
+                onClick={() => setViewMode("KANBAN")}
+                className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2 rounded-lg text-sm font-medium transition-all ${viewMode === "KANBAN" ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-sm" : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"}`}
+              >
+                <ViewColumnsIcon className="w-5 h-5" /> Quadros
+              </button>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+              <div className="relative w-full sm:w-72">
+                <MagnifyingGlassIcon className="w-5 h-5 text-zinc-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Buscar chamado..."
+                  value={searchTitle}
+                  onChange={(e) => setSearchTitle(e.target.value)}
+                  className="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-800 dark:text-zinc-100 font-medium text-sm rounded-xl pl-11 pr-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-zinc-400 shadow-sm"
+                />
+              </div>
+              <div className="relative w-full sm:w-56">
+                <FunnelIcon className="w-5 h-5 text-zinc-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-800 dark:text-zinc-100 font-medium text-sm rounded-xl pl-11 pr-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 appearance-none transition-all cursor-pointer shadow-sm"
+                >
+                  <option value="ALL">Todos os Status</option>
+                  <option value="OPEN">Abertos</option>
+                  <option value="IN_PROGRESS">Em Andamento</option>
+                  <option value="CLOSED">Finalizados</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="pb-10">
+            {loading ? (
+              <p className="text-emerald-600 animate-pulse text-center py-20 font-medium text-lg">
+                Buscando informações...
+              </p>
+            ) : error ? (
+              <p className="text-red-600 text-center py-20 font-medium bg-red-50 dark:bg-red-500/10 rounded-xl">
+                {error}
+              </p>
+            ) : filteredTickets.length === 0 ? (
+              <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-20 text-center shadow-sm flex flex-col items-center">
+                <div className="bg-zinc-100 dark:bg-zinc-800 p-6 rounded-full mb-6">
+                  <TicketIcon className="w-12 h-12 text-zinc-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-zinc-800 dark:text-zinc-200 mb-2">
+                  Caixa de entrada limpa!
+                </h3>
+                <p className="text-zinc-500 text-base">
+                  Nenhum chamado pendente encontrado com os filtros atuais.
+                </p>
+              </div>
+            ) : viewMode === "LIST" ? (
+              renderListView()
+            ) : (
+              renderKanbanView()
+            )}
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
