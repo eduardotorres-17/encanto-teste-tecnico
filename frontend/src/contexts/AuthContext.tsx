@@ -1,28 +1,25 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import type { ReactNode } from "react";
 import { jwtDecode } from "jwt-decode";
 
 interface DecodedToken {
   sub: string;
   email: string;
+  name?: string;
   role: "client" | "support";
-  exp: number; 
+  exp: number;
 }
 
 interface User {
   id: string;
   email: string;
+  name?: string;
   role: "client" | "support";
 }
 
 interface AuthContextType {
   token: string | null;
-  user: User | null; 
+  user: User | null;
   login: (newToken: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
@@ -48,6 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser({
             id: decoded.sub,
             email: decoded.email,
+            name: decoded.name,
             role: decoded.role,
           });
         }
@@ -63,7 +61,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const decoded = jwtDecode<DecodedToken>(newToken);
       localStorage.setItem("@Encanto:token", newToken);
       setToken(newToken);
-      setUser({ id: decoded.sub, email: decoded.email, role: decoded.role });
+      setUser({
+        id: decoded.sub,
+        email: decoded.email,
+        name: decoded.name,
+        role: decoded.role,
+      });
     } catch (error) {
       console.error("Token inválido recebido no login:", error);
     }
